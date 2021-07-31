@@ -1,0 +1,134 @@
+package main
+
+import "fmt"
+
+func main() {
+	//var i int
+	//i = 7
+	// format: 'var' variable_name type '=' value
+	// format: var_name ':=' value and allow programme to figure out type
+	
+	
+	var fav_num int = 7
+	
+	
+	fmt.Println("My favourite number is: ", fav_num)
+	
+	// print value and type of variable:
+	fmt.Printf("%v, %T", fav_num, fav_num)
+	fmt.Println()
+	fmt.Printf("My fav number is of type: %T", fav_num)
+	fmt.Println()
+	fmt.Println("Unused declared variables are a compile time error")
+	
+	//lower case variables are scoped to package
+	//upper case variables are global, and exposed to other packages
+	// block scope, variables are never visibile outside code block
+	
+	//block of variables
+	
+	var (
+		counter = 0
+		friend = "Gerald"
+		sister = "Stephanie"
+		littleSister = "Victoria"
+		brother = "Aaron"
+		armando = "broja"
+	)
+	
+	fmt.Println(counter, friend, sister, littleSister, brother, armando)
+	
+	
+	// convert variable types
+	
+	var toDoub int = 5
+	
+	var doub float32 = float32(toDoub)
+	
+	fmt.Println(toDoub, doub)
+	fmt.Printf("%T", doub)
+	
+	
+	//Primitive types
+	
+	
+	var vrai_faux bool = true
+	fmt.Println()
+	fmt.Printf("%v, %T", vrai_faux, vrai_faux)
+	
+	
+	ab := 7
+	bc := 10
+	
+	fmt.Println()
+	fmt.Println(ab + bc, ab - bc, ab * bc, ab / bc, ab % bc)
+	
+	
+	// bit shifting
+	
+	cc := 8 // 2^3
+	fmt.Println(cc << 4)
+	
+	
+	// constants
+	// constants can't be set to something that needs to compute at compile time like math.sin 
+	const dick int = 18
+	
+	fmt.Println("my dick is", dick, "inches long")
+	
+	
+	//Arrays
+	// format: array_name := [size]type{elements}
+	// format with no assignation: array_name := [size]type
+	
+	monies := [7]int{0, 2, -5, 4, 1, 6, 7}
+	fmt.Println(monies[3])
+	fmt.Println("length of monies is: ", len(monies))
+	
+	//Matrix
+	// this also works: william := [2][2]int{[2]int{1,2}, [2]int{3,4}}
+	
+	var william [2][2]int = [2][2]int{[2]int{1,0}, [2]int{0,1}}
+	fmt.Println("I am in the identity matrix whhooooo", william)
+	
+	//arrays are considered values in GOLANG
+	
+	aaaa := [...]int{1,2,3,4}
+	fmt.Println(aaaa)
+	
+	bbbb := aaaa
+	bbbb[0] = 987987
+	fmt.Println(bbbb)
+	
+	cccc := &bbbb //pointer to bbbb so cccc refering to same underlying data as bbbb so if cccc change, bbbb change and vice versa beech hahahah
+	
+	
+	cccc[0] = 8
+	
+	fmt.Println(cccc, bbbb)
+	
+	
+	 
+	// array slicing is like in python nigga hahahahahahaahahahahahahaha you're stupid gaeeee hahahahahahaha ahahhahahaha ahahahah ahahahah kill urself
+	
+	verycoolarray := [...]int{1,2,3,4,5,6,7,8,9,1000000}
+	sliceabitch_hahaha := verycoolarray[6:]
+	fmt.Println(sliceabitch_hahaha)
+	
+	
+	
+	// hahahaha map and structs niggaaahahahaha hahaha nigaaaaa ieeeegerrrre neeeeeegerrrrr kneeeee heururure
+	
+	sadNiggahMaps := map[string]int{
+		"slaves": 1000,
+		"wamen": 0,
+		"pouuusee": -5,
+		"monies": -102874391,
+	}
+	
+	fmt.Println(sadNiggahMaps)
+	
+	
+	
+}
+
