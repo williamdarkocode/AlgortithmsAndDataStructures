@@ -179,3 +179,24 @@ if __name__ == '__main__':
 
 # # keep this function call here 
 # print(ArrayChallenge(input()))
+
+
+import sys
+# import numpy as np
+# import pandas as pd
+# from sklearn import ...
+
+def make_camel(prev, cur):
+    if prev is None or len(prev.strip()) == 0:
+        return cur.lower()
+    elif len(cur.strip()) == 0:
+        return " "
+    else:
+        return cur.capitalize()
+
+words = []
+for line in sys.stdin:
+    words.append(line.strip())
+
+camel_word = "".join(make_camel(words[i-1] if i-1 >=0 else None, words[i]) for i, w in enumerate(words))
+print(camel_word)

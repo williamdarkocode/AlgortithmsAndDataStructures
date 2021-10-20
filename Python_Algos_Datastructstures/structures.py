@@ -1,3 +1,6 @@
+import random
+
+
 class Empty(Exception):
     pass
 
@@ -172,27 +175,107 @@ class DoubleEndedQueue:
         print(self._data)
         
 
-
-
 class Node:
     __slots__ = '_item', '_next'
 
-    def __init__(self, item, next):
+    def __init__(self, item, next=None):
         self._item = item
         self._next = next
+    
+    def to_string(self):
+        print(self._item)
 
 
 class SinglyLinked:
     def __init__(self, head_item):
-        self._head = Node(head_item, None)
-        
+        self._head = Node(head_item)
+
+    # O(n) time to insert at tail of list
+    def insert_back(self, item):
+        cur_node = self._head
+        while cur_node._next != None:
+            cur_node = cur_node._next
+        new_tail = Node(item, None)
+        cur_node._next = new_tail
+        return
+
+    # O(1) time to insert at head of list
+    def insert_front(self, item):
+        new_head = Node(item, self._head)
+        self._head = new_head
+        return
+
+    def insert_sorted(self, item):
+        new_node = Node(item, self._head)
+        cur_node = new_node
+        while cur_node._next != None and cur_node._next._item < new_node._item:
+            cur_node = cur_node._next
+        new_node._next = cur_node._next
+        cur_node._next = new_node if cur_node is not new_node else cur_node._next
+        self._head = new_node if new_node._next is self._head else self._head
+        return
+
+    def reverse_list(self, prev, cur:Node):
+        if cur._next is not None:
+            self.reverse_list(cur, cur._next)
+        if cur._next is None:
+            self._head = cur
+        cur._next = prev
+
+    def to_string(self):
+        cur_node = self._head
+        out = ""
+        while cur_node is not None:
+            out+=str(cur_node._item)+'-->'
+            cur_node = cur_node._next
+        out+='None'
+        print(out)
+        return
 
 
+class LinkedStack:
+    def __init__(self, top=None):
+        self._top = top
+        self._size = 0 if top is None else 1
+    
+    def __len__(self):
+        return self._size
+    
+    def is_empty(self):
+        return self._size == 0
+    
+    def peek(self):
+        if self.is_empty():
+            raise('Empty Stack')
+        return self._top._item
+    
+    def push(self, elem):
+        if self.is_empty():
+            self._top = Node(elem, None)
+            self._size=1
+        else:
+            new_top = Node(elem, self._top)
+            self._top = new_top
+        return
+    
+    def pop(self):
+        if self.is_empty():
+            raise('Empty Stack')
+        old_top = self._top
+        self._top = self._top._next
+        data = old_top._item
+        del old_top
+        return data
 
-
-
-
-
+    def to_string(self):
+        cur_node = self._top
+        out = ""
+        while cur_node is not None:
+            out+=str(cur_node._item)+'-->'
+            cur_node = cur_node._next
+        out+='None'
+        print(out)
+        return
 
 
 def matching_brackets(delims):
@@ -229,18 +312,34 @@ def pret_a_mange_coffee_queue(people):
 
 def main():
     # pret_a_mange_coffee_queue(['Aaran', 'Aaren', 'Aarez', 'Aarman', 'Aaron', 'Aaron-James', 'Aarron', 'Aaryan', 'Aaryn', 'Aayan'])
-    res_list = ['Aaran', 'Aaren', 'Aarez', 'Aarman', 'Aaron', 'Aaron-James', 'Aarron', 'Aaryan', 'Aaryn', 'Aayan']
+    # res_list = ['Aaron', 'Aaran', 'Aaren', 'Aarez', 'Aarman', 'Aaron-James', 'Aarron', 'Aaryan', 'Aaryn', 'Aayan']
 
-    wait_list = DoubleEndedQueue()
-    for p in res_list:
-        wait_list.add_last(p)
-        wait_list.to_string()
+    # rising_ballers = SinglyLinked(res_list[0])
+    # cur_node = rising_ballers._head
+    # for baller in res_list[1:]:
+    #     cur_node._next = Node(baller)
+    #     cur_node = cur_node._next
+    # rising_ballers.to_string()
 
-    while not wait_list.is_empty():
-        wait_list.remove_first()
-        wait_list.to_string()
+    rand_ints = random.sample(range(0,100),20)
+    print(rand_ints)
+
+    # linked_nums = SinglyLinked(rand_ints[0])
+    # print('init head: ', linked_nums._head._item)
+
+    # for x in rand_ints[1:]:
+    #     linked_nums.insert_sorted(x)
+    # linked_nums.to_string()
+    # linked_nums.reverse_list(None, linked_nums._head)
+    # linked_nums.to_string()
+
+    linked_num_stack = LinkedStack()
+    for num in rand_ints:
+        linked_num_stack.push(num)
+        linked_num_stack.to_string()
+
+    
     return
-
 
 if __name__ == "__main__":
     main()
