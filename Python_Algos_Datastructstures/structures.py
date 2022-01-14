@@ -278,6 +278,22 @@ class LinkedStack:
         return
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def matching_brackets(delims):
     opens = "({["
     closes = ")}]"

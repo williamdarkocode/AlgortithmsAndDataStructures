@@ -256,8 +256,6 @@ def cover_stations():
     return stations_to_use
 
 
-
-
 def fib_dp(i:int, computed={}):
     if i == 0:
         return 0
@@ -371,12 +369,271 @@ def classic_knapsack_with_non_interger_sacs():
     return
 
 
+def edge_list_to_graph(edge_list:list):
+    graph = {}
+    for edge in edge_list:
+        l,r = edge
+        if l not in graph:
+            graph[l] = []
+        if r not in graph:
+            graph[r] = []      
+        graph[l].append(r)
+        graph[r].append(l)
+    return graph
+
+def dfs_using_array_stack(edge_list:list, source_node):
+    graph = edge_list_to_graph(edge_list)
+    
+    visited = set()
+    stack = [source_node]
+    print(graph)
+    while len(stack) > 0:
+        top = stack.pop()
+        print(top)
+        visited.add(top)
+        for neighbour in graph[top]:
+            if neighbour not in visited:
+                stack.append(neighbour)
+
+    return
+
+def dfs_using_call_stack(graph:dict, visited:set, source_node):
+    print(source_node)
+    visited.add(source_node)
+    for neighbour in graph[source_node]:
+        if neighbour not in visited:
+            dfs_using_call_stack(graph, visited, neighbour)
+    return
+
+def bfs_arr_queue(edge_list:list, source_node):
+    graph = edge_list_to_graph(edge_list)
+    visited = set()
+    queue = [ source_node ]
+    print(graph)
+    while len(queue) > 0:
+        top = queue.pop(0)
+        print(top)
+        visited.add(top)
+        for neighbour in graph[top]:
+            if neighbour not in visited:
+                queue.append(neighbour)
+    return
+
+def has_path_dfs(graph, current, target, visited, path):
+    path.append(current)
+    visited.add(current)
+    if current == target:
+        return True,path
+    for neighbour in graph[current]:
+        if neighbour not in visited:
+            is_target, full_path = has_path_dfs(graph, neighbour, target, visited, path[0:])
+            if is_target:
+                return True, full_path
+    return False, []
+
+def has_path_bfs(graph, source, target):
+    visited = set()
+    queue = [ source ]
+    while queue:
+        front = queue.pop(0)
+        print(front)
+        visited.add(front)
+        if front ==  target:
+            return True
+        for neighbour in graph[front]:
+            if neighbour not in visited:
+                queue.append(neighbour)
+    return False
+
+def count_connected_nodes(graph): #similar to count number islands
+    visited = set()
+    num_node_groups = 0
+
+    for node in graph.keys():
+        is_connected = explore_nodes_bfs(node, graph, visited)
+        if is_connected:
+            num_node_groups+=1
+    print(num_node_groups)
+    return num_node_groups
+
+def explore_nodes_bfs(source, graph, visited):
+    if source in visited:
+        return False
+    
+    queue = [ source ]
+    while len(queue) > 0:
+        front  = queue.pop(0)
+        visited.add(front)
+        for neighbour in graph[front]:
+            if neighbour not in visited:
+                queue.append(neighbour)
+
+    return True # can return true here because we know the nodes have been traversed to their fullest
 
 
+def largest_island(graph):
+    visited = set()
+    largest = 0
+    for node in graph.keys():
+        node_count = count_nodes_dfs(node, graph, visited)
+        largest = max(largest, node_count)
+
+    return largest
+
+def count_nodes_bfs(source, graph:dict, visited:set):
+    if source in visited:
+        return 0
+    queue = [ source ]
+    count  = 0
+    while len(queue) > 0:
+        front = queue.pop(0)
+        if front not in visited:
+            count+=1
+        visited.add(front)
+        for neighbour in graph[front]:
+            if neighbour not in visited:
+                queue.append(neighbour)
+
+    return count
+
+def count_nodes_dfs(source, graph:dict, visited:set):
+    if source in visited:
+        return 0
+    
+    count = 1
+    visited.add(source)
+
+    for neighbour in graph[source]:
+        if neighbour not in visited:
+            count += count_nodes_dfs(neighbour, graph, visited)
+
+    return count
+
+
+# shortest path algorithm is always BFS unless in the case of minimising weighted edges
+# then use Dijkstras 
+
+def length_of_shortest_path(graph, start, end):
+    visted = set()
+    queue = [ [start, 0] ]
+
+    while len(queue) > 0:
+        node, distance = queue.pop(0)
+        visted.add(node)
+        if node == end:
+            return distance
+        
+        for neighbour in graph[node]:
+            if neighbour not in visted:
+                queue.append([neighbour, distance+1])  
+
+
+    return -1
+
+
+def count_island(grid_graph):
+    visited = set()
+    num_islands = 0
+    for i in range(len(grid_graph)):
+        for j in range(len(grid_graph[0])):
+            cell = f'{i},{j}'
+            is_island = search_islands(cell, grid_graph, visited)
+            if is_island:
+                num_islands+=1
+    return num_islands
+
+def search_islands(cell, grid:list, visited:set):
+    if cell in visited:
+        return False
+    
+    row, col = int(cell.split(',')[0]), int(cell.split(',')[1])
+    row_in_range = 0 <= row and row < len(grid)
+    col_in_range = 0 <= col and col < len(grid[0])
+
+    if not row_in_range or not col_in_range:
+        return False
+
+    if grid[row][col] == 'W':
+        return False
+    
+    visited.add(cell)
+
+    for neighbour in [f'{row-1},{col}', f'{row+1},{col}', f'{row},{col-1}', f'{row},{col+1}']:
+        if neighbour not in visited:
+            search_islands(neighbour, grid, visited)
+
+    return True
+
+
+
+def find_smallest_island(grid:list):
+    return
 
 
 def main():
-    classic_knapsack_with_non_interger_sacs()
+    edge_list = [
+        ["i", "j"],
+        ["k", "i"],
+        ["m", "k"],
+        ["k", "l"],
+        ["o", "n"]
+    ]
+    test_graph = {
+        "a": ["b", "c"],
+        "b": ["d", "c"],
+        "c": ["e"],
+        "d": ["f"],
+        "e": [],
+        "f": []
+    }
+    acyc_graph = {
+        "f": ["g", "i"],
+        "g": ["h"],
+        "h": [],
+        "i": ["g", "k"],
+        "j": ["i"],
+        "k": []
+    }
+
+    structy_graph = {
+        '0': ['8', '1', '5'],
+        '1': ['0'],
+        '5': ['0', '8'],
+        '8': ['0', '5'],
+        '2': ['3', '4'],
+        '3': ['2', '4'],
+        '4': ['3', '2']
+    }
+
+    shrtestpth_elist = [
+        ['w', 'x'],
+        ['x', 'y'],
+        ['z', 'y'],
+        ['z', 'v'],
+        ['w', 'z']
+    ]
+
+    # island_grid = [
+    #     ['W', 'L', 'W', 'W', 'W'],
+    #     ['W', 'L', 'W', 'W', 'W'],
+    #     ['W', 'W', 'W', 'L', 'W'],
+    #     ['W', 'W', 'L', 'L', 'W'],
+    #     ['L', 'W', 'W', 'L', 'L'],
+    #     ['L', 'L', 'W', 'W', 'W'],
+    # ]
+
+    # island_grid = [
+    #     ['W', 'W'],
+    #     ['W', 'W'],
+    #     ['W', 'W'],
+    # ]
+
+    # island_count = count_island(island_grid)
+
+    # print(island_count)
+
+    print(fib_dp(23, {}))
+
     return
 
 
